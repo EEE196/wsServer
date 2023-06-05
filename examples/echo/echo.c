@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ws.h>
+#include <../../../../common/convert.h>
 
 /**
  * @dir examples/
@@ -99,7 +100,17 @@ void onmessage(ws_cli_conn_t *client,
 	 *
 	 * Client equals to NULL: broadcast
 	 */
-	ws_sendframe(NULL, (char *)msg, size, type);
+	CollatedData collatedData;
+	memcpy(&collatedData, msg, sizeof(collatedData);
+	printf("SO2 SENSOR COLLECTION:\n\t%d ppm SO2\n", collatedData.PM_Data.SO_ppm);
+	printf("CO2 SENSOR COLLECTION:\n\t%f ppm CO2\n\t%f °C\n\t%f %%RH\n", collatedData.CO_Data.co2_ppm, collatedData.CO_Data.temperature, collatedData.CO_Data.relative_humidity);
+	printf("PM SENSOR COLLECTION:\n"
+			"\t%f pm2.5\n"
+			"\t%f pm10.0\n"
+			"\t%f nc2.5\n"
+			"\t%f nc10.0\n",
+			collatedData.PM_Data.mc_2p5, collatedData.PM_Data.mc_10p0,
+			collatedData.PM_Data.nc_2p5, collatedData.PM_Data.nc_10p0);
 }
 
 /**
