@@ -86,11 +86,6 @@ void onmessage(ws_cli_conn_t *client,
 {
 	char *cli;
 	cli = ws_getaddress(client);
-#ifndef DISABLE_VERBOSE
-	printf("I receive a message: %s (size: %" PRId64 ", type: %d), from: %s\n",
-		msg, size, type, cli);
-#endif
-
 	/**
 	 * Mimicks the same frame type received and re-send it again
 	 *
@@ -103,6 +98,7 @@ void onmessage(ws_cli_conn_t *client,
 	 */
 	CollatedData collatedData;
 	memcpy(&collatedData, msg, sizeof(collatedData));
+	printf("TIME: %0.0f\n", collatedData.GPS_Data.utc_time);
 	printf("SO2 SENSOR COLLECTION:\n\t%d ppm SO2\n", collatedData.PM_Data.SO_ppm);
 	printf("CO2 SENSOR COLLECTION:\n\t%f ppm CO2\n\t%f °C\n\t%f %%RH\n", collatedData.CO_Data.co2_ppm, collatedData.CO_Data.temperature, collatedData.CO_Data.relative_humidity);
 	printf("PM SENSOR COLLECTION:\n"
@@ -112,7 +108,34 @@ void onmessage(ws_cli_conn_t *client,
 			"\t%f nc10.0\n",
 			collatedData.PM_Data.mc_2p5, collatedData.PM_Data.mc_10p0,
 			collatedData.PM_Data.nc_2p5, collatedData.PM_Data.nc_10p0);
+	int length = snprintf(NULL, 0, "{\
+				\"latitude\": %f,\
+				\"longitude\": %f,\
+				\"utc_time\": %0.0f,\
+				\"SO_ppm\": %d,\
+				\"co2_ppm\": %f,\
+				\"temperature\": %f,\
+				\"relative_humidity\": %f,\
+				\"pm2.5\": %f,\
+				\"pm10.0\": %f,\
+				\"nc2.5\": %f,\
+				\"nc10.0\": %f}", collatedData.GPS_Data.nmea_latitude, collatedData.GPS_Data.nmea_longitude, collatedData.GPS_Data.utc_time, collatedData.PM_Data.SO_ppm, collatedData.CO_Data.co2_ppm, collatedData.CO_Data.temperature, collatedData.CO_Data.relative_humidity, collatedData.PM_Data.mc_2p5, collatedData.PM_Data.mc_10p0, collatedData.PM_Data.nc_2p5, collatedData.PM_Data.nc_10p0);
+	char string[length];
+	snprintf(string, length, "{\
+				\"latitude\": %f,\
+				\"longitude\": %f,\
+				\"utc_time\": %0.0f,\
+				\"SO_ppm\": %d,\
+				\"co2_ppm\": %f,\
+				\"temperature\": %f,\
+				\"relative_humidity\": %f,\
+				\"pm2.5\": %f,\
+				\"pm10.0\": %f,\
+				\"nc2.5\": %f,\
+				\"nc10.0\": %f}", collatedData.GPS_Data.nmea_latitude, collatedData.GPS_Data.nmea_longitude, collatedData.GPS_Data.utc_time, collatedData.PM_Data.SO_ppm, collatedData.CO_Data.co2_ppm, collatedData.CO_Data.temperature, collatedData.CO_Data.relative_humidity, collatedData.PM_Data.mc_2p5, collatedData.PM_Data.mc_10p0, collatedData.PM_Data.nc_2p5, collatedData.PM_Data.nc_10p0);
+	ws_sendframe_txt(NULL, string);
 }
+
 
 /**
  * @brief Main routine.
