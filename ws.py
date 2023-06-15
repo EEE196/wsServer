@@ -24,10 +24,10 @@ co2_read=0
 pm_read=0
 
 def receiveLora():
-    print("Connecting to localhost:8765:")
+    print("Connecting to localhost:8080:")
     while(1):
         try:
-            with connect("ws://localhost:8765") as websocket:
+            with connect("ws://localhost:8080") as websocket:
                 while(1):
                     print("Waiting for message")
                     try:
