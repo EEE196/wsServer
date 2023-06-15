@@ -7,6 +7,7 @@ async def send_sample_data(websocket, path):
     print("Client connected")
     while True:
         data = {
+            "temperature": random.uniform(0, 50),
             "relative_humidity": random.uniform(30, 70),
             "SO_ppm": random.randint(0, 10),
             "co2_ppm": random.uniform(400, 1000),
