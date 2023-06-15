@@ -65,7 +65,7 @@ def update(i):
         ax[i].scatter(len(data[i])-1, data[i][-1])
         ax[i].text(len(data)-1, data[i][-1]+2, "{}".format(data[i][-1]))
         ax[i].set_ylim(0,max(data[i])+0.1*max(data[i])+0.0001)
-        ax[i].set_xlim(t[0],advanceByMinute())
+        ax[i].set_xlim(t[0],t[0]+datetime.timedelta(seconds=60))
 
 for i in range(0,3):
     data.append(collections.deque(np.zeros(30)))
