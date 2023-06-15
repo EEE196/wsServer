@@ -26,16 +26,18 @@ pm_read=0
 def receiveLora():
     print("Connecting to localhost:8765:")
     with connect("ws://localhost:8765") as websocket:
-        try:
+        while(1)
             print("Waiting for message")
-            data = websocket.recv()
-            data_dict=json.loads(data)
-            t_read= data_dict["utc_time"]
-            so_read=float(data_dict["SO_ppm"])
-            co2_read=float(data_dict["co2_ppm"])
-            pm_read=float(data_dict["pm2.5"])
-        except:
-            pass
+            try:
+                data = websocket.recv()
+                data_dict=json.loads(data)
+                t_read= data_dict["utc_time"]
+                so_read=float(data_dict["SO_ppm"])
+                co2_read=float(data_dict["co2_ppm"])
+                pm_read=float(data_dict["pm2.5"])
+                break
+            except:
+                pass
 
 def update(i):
     receiveLora()
