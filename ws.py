@@ -25,19 +25,28 @@ pm_read=0
 
 def receiveLora():
     print("Connecting to localhost:8765:")
-    with connect("ws://localhost:8765") as websocket:
-        while(1)
-            print("Waiting for message")
-            try:
-                data = websocket.recv()
-                data_dict=json.loads(data)
-                t_read= data_dict["utc_time"]
-                so_read=float(data_dict["SO_ppm"])
-                co2_read=float(data_dict["co2_ppm"])
-                pm_read=float(data_dict["pm2.5"])
-                break
-            except:
-                pass
+    while(1):
+        try:
+            with connect("ws://localhost:8765") as websocket:
+                while(1):
+                    print("Waiting for message")
+                    try:
+                        data = websocket.recv()
+                        data_dict=json.loads(data)
+                        t_read= data_dict["utc_time"]
+                        so_read=float(data_dict["SO_ppm"])
+                        co2_read=float(data_dict["co2_ppm"])
+                        pm_read=float(data_dict["pm2.5"])
+                        break
+                    except:
+                        print("Error")
+                        pass
+            break
+        except ConnectionRefusedError:
+            print("Connection Refused")
+        except:
+            print("Unknown Error")
+
 
 def update(i):
     receiveLora()
