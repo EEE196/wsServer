@@ -31,12 +31,18 @@ def receiveLora():
                 while(1):
                     print("Waiting for message")
                     try:
+                        websocket.send("Query")
                         data = websocket.recv()
-                        data_dict=json.loads(data)
-                        t_read= data_dict["utc_time"]
-                        so_read=float(data_dict["SO_ppm"])
-                        co2_read=float(data_dict["co2_ppm"])
-                        pm_read=float(data_dict["pm2.5"])
+                        try:
+                            data_dict=json.loads(data)
+                            t_read= data_dict["utc_time"]
+                            so_read=float(data_dict["SO_ppm"])
+                            co2_read=float(data_dict["co2_ppm"])
+                            pm_read=float(data_dict["pm2.5"])
+                        except:
+                            print(data_dict)
+                            print("Error parsing data")
+                            continue
                         break
                     except:
                         print("Error")
